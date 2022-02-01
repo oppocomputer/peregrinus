@@ -16,7 +16,7 @@ If you place program files (.ino) in the same folder, you can access the functio
 
 
 To compile the program you currently need the following .ZIP Libraries (look in radio for instruction)
-  - https://github.com/jonsowman/librtty
+  - https://github.com/oppocomputer/librtty
 
 
 Define all needed pins in the following way:
@@ -25,6 +25,7 @@ Define all needed pins in the following way:
 If you need help to include a program, just send the .ino to spaceheadingdeezers at gmail.com
 */
 
+
 #define RADIOPIN 5 
 
 
@@ -32,8 +33,6 @@ If you need help to include a program, just send the .ino to spaceheadingdeezers
 
 
 //RADIO
-unsigned long previousMillis = 0; //Timing
-const long interval = 1000; //Interval between radio transmissions
 char message[200]; //String of characters to transmit; Used for radiocommunication
 const char callsign[7] = "ON6GMZ";
 
@@ -41,7 +40,15 @@ const char callsign[7] = "ON6GMZ";
 
 //TESTING
 float temperature = 32.651;
-char tempBuffer[5];
+char tempBuffer[10];
+
+
+
+
+//Timing
+unsigned long previousMillis = 0; //Timing
+const long radioInterval = 10000; //Interval between radio transmissions
+
 
 void setup()
 { 
@@ -55,27 +62,31 @@ void setup()
 
 
 
-//We are using millis() to keep track of time (instead of delay(), this can be used to accurately run a function every x seconds without stopping the arduino completely (meaning that you can send read sensor values)
+//We are using millis() to keep track of time (instead of delay(), this can be used to accurately run a function every x seconds without stopping the arduino completely (meaning that you can send read sensor values and transmit radio at the same time!)
 //https://docs.arduino.cc/built-in-examples/digital/BlinkWithoutDelay and https://www.arduino.cc/reference/en/language/functions/time/millis/
 //If you have a delay in your code and dont know how to adapt it into the program just send us a mail (spaceheadingdeezers at gmail.com)
-// "if (currentMillis - previousMillis >= 2500) {}" runs every 2.5 seconds!
+
 
 void loop()
 {
-  unsigned long currentMillis = millis();                   
-           
-  if (currentMillis - previousMillis >= interval) 
+  unsigned long currentMillis = millis(); //Update timings                  
+  // "if (currentMillis - previousMillis >= 2500) {}" runs every 2.5 seconds! (2500ms = 2.5s)
+
+
+
+
+
+  //Radio    
+  if (currentMillis - previousMillis >= radioInterval) 
   {
     previousMillis = currentMillis; //Update millis
 
 
-    
     dtostrf(temperature, 0, 3, tempBuffer); //Float values cant directly be used in sprintf so are first converted to a string; More info https://www.programmingelectronics.com/dtostrf/ 
     sprintf(message, "%s T= %s", callsign, tempBuffer); //More info https://www.programmingelectronics.com/sprintf-arduino/
     
     transmitRadio(message);
-    
-    Serial.print(message);
+    Serial.print(message); //REMOVE ON LAUNCH
   }                   
  
        

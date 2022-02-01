@@ -1,5 +1,5 @@
 /*
-  https://github.com/jonsowman/librtty is needed, press the green Code button and Download ZIP. Then go to Sketch -> Include Library -> Add .ZIP Library and open the downloaded file from downloads.
+  https://github.com/oppocomputer/librtty is needed, press the green Code button and Download ZIP. Then go to Sketch -> Include Library -> Add .ZIP Library and open the downloaded file from downloads.
 */
  
 
