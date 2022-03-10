@@ -9,38 +9,34 @@
  |_|                  |___/                        
 
 
-v1 - added radio communication
-
+v1 - added rtty radio communication
+v2 - added iridium communication
 
 If you place program files (.ino) in the same folder, you can access the functions in them (any #include(d) files will imported aswell)
 
 
-To compile the program you currently need the following .ZIP Libraries (look in radio for instruction)
+To compile the program you currently need the following .ZIP Libraries (look in radio for instruction on how to install libraries from github)
   - https://github.com/oppocomputer/librtty
+  - https://github.com/mikalhart/IridiumSBD
 
 
 Define all needed pins in the following way:
   #define name pinNumber 
 
-If you need help to include a program, just send the .ino to spaceheadingdeezers at gmail.com
+  (technical reason is that it uses less memory and flash on the arduino)
 */
 
 
-#define RADIOPIN 5 
+#define RTTY_RADIOPIN 5 
+#define IRIDIUM_TX 10
+#define IRIDIUM_RX 11
+
+//Settings 
+bool serial = true; 
+bool iridium = true;
 
 
 
-
-
-//RADIO
-char message[200]; //String of characters to transmit; Used for radiocommunication
-const char callsign[7] = "ON6GMZ";
-
-
-
-//TESTING
-float temperature = 32.651;
-char tempBuffer[10];
 
 
 
@@ -52,12 +48,11 @@ const long radioInterval = 10000; //Interval between radio transmissions
 
 void setup()
 { 
-  Serial.begin(9600); //Used for debugging; REMOVE ON LAUNCH 
+  if (serial) Serial.begin(9600); //Used for debugging; REMOVE ON LAUNCH 
+
+
+  if (iridium) startIridium(19200);
   
-  pinMode(RADIOPIN,OUTPUT); //Radio control pin (TXD)
-
-  initiateRadio(RADIOPIN);
-
 }
 
 
@@ -70,24 +65,18 @@ void setup()
 void loop()
 {
   unsigned long currentMillis = millis(); //Update timings                  
-  // "if (currentMillis - previousMillis >= 2500) {}" runs every 2.5 seconds! (2500ms = 2.5s)
+  // "if (currentMillis - previousMillis >= 2500) {Serial.print("Hello world");}" runs every 2.5 seconds! (2500ms = 2.5s)
 
 
-
-
-
-  //Radio    
-  if (currentMillis - previousMillis >= radioInterval) 
-  {
-    previousMillis = currentMillis; //Update millis
-
-
-    dtostrf(temperature, 0, 3, tempBuffer); //Float values cant directly be used in sprintf so are first converted to a string; More info https://www.programmingelectronics.com/dtostrf/ 
-    sprintf(message, "%s T= %s", callsign, tempBuffer); //More info https://www.programmingelectronics.com/sprintf-arduino/
+  if (iridium) {
     
-    transmitRadio(message);
-    Serial.print(message); //REMOVE ON LAUNCH
-  }                   
- 
+  }
+
+
        
+}
+
+void serialEvent() {
+  if (Serial.readStringUntil('\n') == "v") iridiumVersion(); //DEBUG
+  if (Serial.readStringUntil('\n') == "q") iridiumQuality();
 }
