@@ -12,11 +12,10 @@
 v1 - added rtty radio communication
 v2 - added iridium communication
 
-If you place program files (.ino) in the same folder, you can access the functions in them (any #include(d) files will imported aswell)
+If you place program files (.ino) in the same folder, you can access the functions in them (any #include(d) files will imported aswel
 
 
-To compile the program you currently need the following .ZIP Libraries (look in radio for instruction on how to install libraries from github)
-  - https://github.com/oppocomputer/librtty
+To compile the program you currently need the following .ZIP Libraries (https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries + Code > Download ZIP)
   - https://github.com/mikalhart/IridiumSBD
 
 
@@ -26,19 +25,12 @@ Define all needed pins in the following way:
   (technical reason is that it uses less memory and flash on the arduino)
 */
 
-
-#define RTTY_RADIOPIN 5 
 #define IRIDIUM_TX 10
 #define IRIDIUM_RX 11
 
 //Settings 
 bool serial = true; 
 bool iridium = true;
-
-
-
-
-
 
 
 //Timing
@@ -68,14 +60,17 @@ void loop()
   // "if (currentMillis - previousMillis >= 2500) {Serial.print("Hello world");}" runs every 2.5 seconds! (2500ms = 2.5s)
 
 
-  if (iridium) {
-    
+  if (iridium && currentMillis - previousMillis >= 1000) {
+    char T = -16;
+    //        Radiation, magneto_x, magneto_y, magneto_z, gyro_x, gyro_y, gyro_z, voltage, temperature  (voltage and temperature will only get sent every 10s, the rest every 1s)
+    updateData(3684,      -5368,      1395,    -513,      19263,  76054,  98862,  8762,     T); //This function will take care of all iridium transmission needs, every 10th time it will transmit the data block
   }
-
 
        
 }
 
+
+//NOT NEEDED FOR LAUNCH
 void serialEvent() {
   if (Serial.readStringUntil('\n') == "v") iridiumVersion(); //DEBUG
   if (Serial.readStringUntil('\n') == "q") iridiumQuality();
