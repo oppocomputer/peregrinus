@@ -37,7 +37,7 @@ bool iridium = true;
 
 //Timing
 unsigned long previousMillis = 0; //Timing
-const long radioInterval = 10000; //Interval between radio transmissions
+
 
 
 void setup()
@@ -79,4 +79,6 @@ void serialEvent()
 {
   if (Serial.readStringUntil('\n') == "v") iridiumVersion(); //DEBUG
   if (Serial.readStringUntil('\n') == "q") iridiumQuality();
+  if (Serial.readStringUntil('\n') == "s") {
+    }
 }
