@@ -1,3 +1,4 @@
+//Iridium RockBLOCK control script
 #include <IridiumSBD.h>
 #include <SoftwareSerial.h> 
 
