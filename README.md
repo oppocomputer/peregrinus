@@ -1,5 +1,6 @@
 # Peregrinus
-Peregrinus Experiment documentation
+Peregrinus Experiment documentation.
+
 These files/programs are for use on the maiden voyage of the Ariane 6 rocket.
 
 ## peregrinus-main-computer
