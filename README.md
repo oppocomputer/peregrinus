@@ -13,6 +13,6 @@ This folder contains the Arduino program(s) for data encoding, iridium communica
 
 
 
-# Licensing
+## Licensing
 All files are licensed under [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
